@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h1>Components</h1>
+  <!-- Button to open the modal for creating a component -->
+  <button type="button" class="btn btn-success" 
+          data-bs-toggle="modal"
+          data-bs-target="#componentModal"
+          hx-get="{% url 'component-create' %}"
+          hx-target="#componentModalContent"
+          >
+    Create Component
+  </button>
+  <hr> 
+
+  <!-- Modal for Component Creation -->
+  <div class="modal" id="componentModal" tabindex="-1" aria-labelledby="componentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content" id="componentModalContent">
+        <!-- Modal content is loaded dynamically via HTMX -->
+      </div>
+    </div>
+  </div>
+
+
+
+<!-- Filtering and Sorting Form -->
+<form id="filter-form" class="mb-3"
+      hx-get="{% url 'component-list' %}"
+      hx-target="#component-table-body"
+      hx-push-url="true"
+      hx-trigger="change"
+      >
+  <div class="row g-2">
+    <!-- Search by Identifier -->
+    <div class="col-md-4">
+      <input type="text" name="search" class="form-control"
+      placeholder="Search by identifier"
+      value="{{ request.GET.search }}"
+      hx-trigger="input"
+      hx-get="{% url 'component-list' %}"
+      hx-target="#component-table-body"
+      hx-push-url="true">
+    </div>
+
+  </div>
+</form>
+
+<!-- Component Table -->
+<table class="table table-striped table-hover border shadow-sm" id="component-table">
+  <thead class="table-dark">
+    <tr>
+      <th class="sortable-header" data-column="id">
+        DB-PrimaryKey
+        <i class="bi"></i>
+      </th>
+
+      <th class="sortable-header" data-column="identifier">
+        Component Identifier
+        <i class="bi"></i>
+      </th>
+
+      <th class="sortable-header" data-column="inventory_level">Inventory Levels [Last Measurement]</th>
+
+      <th class="sortable-header" data-column="created_at">
+        Created At
+        <i class="bi"></i>
+      </th>
+    </tr>
+  </thead>
+  
+  <tbody id="component-table-body">
+    {% for component in object_list %}
+    <tr>
+      <td>{{component.id}}</td>
+      <td>{{ component.identifier }}</td>
+      <td>
+        {% with inventory_level=component.inventory_levels %}
+        <ul>
+          {% for iv in component.inventory_levels.all %}
+              <li>
+                {% if iv.name %}
+                  <b>{{iv.name}}:</b>
+                {% else %}
+                  <b>No Name</b>
+                {% endif %}
+
+                 {{iv.last_level}}
+                
+              </li>
+          {% endfor %}
+        </ul>
+        {% endwith %}
+      </td>
+      <td>{{ component.created_at }}</td>
+    </tr>
+    {% endfor %}
+    
+    {% if has_next %}
+      <tr   
+        hx-get="{% url 'component-list' %}?page={{ next_page_number }}&order_by={{ request.GET.order_by }}&search={{ request.GET.search }}"
+        hx-trigger="revealed"
+        hx-swap="outerHTML"
+      >
+      </tr>
+    {% endif %}
+  </tbody>
+</table>
+
+{% if not has_next %}
+  <p class="text-center text-muted">No more Components!</p>
+{% endif %}
+
+<!-- Sorting JavaScript -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    let currentOrderBy = new URLSearchParams(window.location.search).get("order_by") || "created_at" || "inventory_level";
+
+    document.querySelectorAll(".sortable-header").forEach(header => {
+      header.addEventListener("click", function () {
+        let column = this.getAttribute("data-column");
+        let newOrderBy = currentOrderBy === column ? `-${column}` : column;
+
+        // Update URL and trigger HTMX request
+        let url = `{% url 'component-list' %}?order_by=${newOrderBy}`;
+        htmx.ajax('GET', url, { target: "#component-table-body", pushUrl: true });
+
+        // Update current order_by for next click
+        currentOrderBy = newOrderBy;
+
+        // Update icons
+        document.querySelectorAll(".sortable-header i").forEach(icon => icon.className = "bi");
+        this.querySelector("i").className = newOrderBy.startsWith("-") ? "bi bi-caret-down-fill" : "bi bi-caret-up-fill";
+      });
+    });
+  });
+</script>
+
+</div>
+
+
+{% endblock %}

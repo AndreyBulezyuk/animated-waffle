@@ -1,0 +1,14 @@
+{
+    "editor.formatOnSave": true,
+    "python.formatting.provider": "black",
+    "python.linting.enabled": false,
+    "python.linting.lintOnSave": false,
+    "python.linting.pylintEnabled": false,
+    "python.linting.pylintArgs": [
+        "--max-line-length=88"
+    ],
+
+    "python.analysis.typeCheckingMode": "basic",
+    "python.analysis.autoImportCompletions": false
+}
+  

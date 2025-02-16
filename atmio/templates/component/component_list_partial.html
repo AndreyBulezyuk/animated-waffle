@@ -1,0 +1,34 @@
+{% for component in components %}
+<tr>
+  <td>{{component.id}}</td>
+  <td>{{ component.identifier }}</td>
+  <td>
+    {% with inventory_level=component.inventory_levels %}
+    <ul>
+      {% for iv in component.inventory_levels.all %}
+          <li>
+            {% if iv.name %}
+              <b>{{iv.name}}:</b>
+            {% else %}
+              <b>No Name</b>
+            {% endif %}
+
+             {{iv.last_level}}
+            
+          </li>
+      {% endfor %}
+    </ul>
+    {% endwith %}
+  </td>
+  <td>{{ component.created_at }}</td>
+</tr>
+{% endfor %}
+
+{% if has_next %}
+<tr   
+  hx-get="{% url 'component-list' %}?page={{ next_page_number }}&order_by={{ request.GET.order_by }}&search={{ request.GET.search }}"
+  hx-trigger="revealed"
+  hx-swap="outerHTML">
+  <td></td>
+</tr>
+{% endif %}

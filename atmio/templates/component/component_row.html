@@ -1,0 +1,23 @@
+<tr>
+  <td>{{component.id}}asdsdaf</td>
+  <td>{{ component.identifier }}</td>
+  <td>
+    {% with inventory_level=component.inventory_levels %}
+    <ul>
+      {% for iv in component.inventory_levels.all %}
+          <li>
+            {% if iv.name %}
+              <b>{{iv.name}}:</b>
+            {% else %}
+              <b>No Name</b>
+            {% endif %}
+
+             {{iv.last_level}}
+            
+          </li>
+      {% endfor %}
+    </ul>
+    {% endwith %}
+  </td>
+  <td>{{ component.created_at }}</td>
+</tr>

@@ -1,0 +1,20 @@
+<div class="modal-header">
+  <h5 class="modal-title" id="componentModalLabel">Create Component</h5>
+  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+
+<div class="modal-body">
+  <form hx-post="{% url 'component-create' %}" 
+        hx-target="#component-table-body" 
+        hx-swap="afterbegin"
+        hx-trigger="submit">
+      
+      {% csrf_token %}
+      {{ form.as_p }}
+
+      <div class="modal-footer">
+          <button type="submit" data-bs-dismiss="modal" class="btn btn-primary">Create</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+      </div>
+  </form>
+</div>

@@ -1,0 +1,5 @@
+django
+django-htmx
+django-simple-history
+django-filter
+django-simple-history

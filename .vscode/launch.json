@@ -1,0 +1,21 @@
+{
+    "configurations": [
+    {
+        "name": "Python: Django",
+        "type": "python",
+        "request": "launch",
+        "reAttach": true,
+        "url": "localhost:8000",
+        "program": "${workspaceFolder}/atmio/manage.py",
+        "args": [
+            "runserver",
+            "8000"
+        ],
+        "django": true
+    },
+
+
+        
+    ]
+
+}
