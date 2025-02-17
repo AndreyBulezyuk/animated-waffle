@@ -81,6 +81,13 @@ Assume your company has 20 new contracts, meaning your number of IoT readings wi
 | **Neo4j Aura**                 | Good – scales with clustering for graph loads    | Moderate–High – subscription‑based | High – fully managed graph service       | Good – real‑time graph traversals for anomaly detection | Excellent – graph model ideal for digital twins & relationships |
 
 
+## Assuming Greenfield:
+
+If was to start from scratch (greenfield) and with the limited Requirements provided i would:
+1. Use Django + PostgreSQL for ACID data (Auth, RBAC, Payments, Tenants/Customers, etc.)
+2. Explore Neo4j or a GraphDB from AWS for Pipelines (due to high Connectivity).
+3. Use MongoDB or a NoSQL from AWS for IoT/Hardware Sensor readings. (due to scalability and free structure)
+
 
 ## Scenarios:
 
